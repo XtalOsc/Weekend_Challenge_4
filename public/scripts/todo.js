@@ -4,6 +4,12 @@ $(document).ready(function(){
   console.log('document ready sourced');
   var taskArray = [];
 
+  // AJAX CALL
+  // GET ALL LISTS
+  // listTasks( lists )
+  // Display the list on the DOM when the page loads
+
+
   //store task in database
   $('#createTask').on('click', function(){
     console.log('in createTask on click');
@@ -29,15 +35,28 @@ $(document).ready(function(){
   });//end createTask on click
 
   //on checkbox click: change complete status in database
-  $(document).on('change', 'input', function() {
+  $(document).on('change', 'input[type="checkbox"]', function() {
     console.log('in input on change');
-    if($(this).is(':checked')){
-      console.log('box ', $( this ).attr('id'), ' is checked');
-    }//end if
-    else if (!$(this).is(':checked')){
-      console.log('box ', $( this ).attr('id'), ' is not checked');
-    }//end else if
+    console.log( "this.attr.id", $(this).attr('id') );
+      var objectToSend = {
+        id : $(this).attr('id'),
+        completed : $(this).is(':checked')
+      }; // end object
+
+      $.ajax({
+        type: 'POST',
+        url: '/changeStatus',
+        data: objectToSend,
+        success: function (data){
+          console.log('in ajax success changeStatus');
+          //push to task array
+          taskArray=data;
+          console.log('task array: ',taskArray);
+          listTasks(taskArray);
+        }//end success
+      });//end ajax
   });//end checkbox change
+
 });//end document ready
 
 var listTasks = function(task){
@@ -49,5 +68,4 @@ var listTasks = function(task){
     outputText += '<p id="task' + i + '">' + line + '</p>';
     $('#taskList').html(outputText);
   }//end for loop
-  // console.log("outputText in listTasks:",outputText);
 }//end listTasks function

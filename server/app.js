@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-// var urlEncodedParser = bodyParser.urlencoded({extended: false});
+var urlEncodedParser = bodyParser.urlencoded({extended: false});
 var path = require('path');
 var pg = require('pg');
 var connectionString = 'postgres://localhost:5432/toDoList';
@@ -14,26 +14,6 @@ app.use(bodyParser.json());
 app.listen('8080', function(){
   console.log('listening on port 8080');
 });
-
-//add task to database
-app.post('/addTask', function(req, res){
-  console.log('in addTask');
-  pg.connect(connectionString, function(err,client,done){
-    if(err){
-      console.log('error: ',err);
-    }//end if
-    else{
-      console.log('connected to database for addTask');
-      var resultArray=[];
-      console.log('task in server: ', req.body);
-      var resultQuery = client.query('INSERT INTO todo (task, completed) VALUES ($1, $2) RETURNING *;', [req.body.task,req.body.completed]);
-      resultQuery.on('end', function(){
-        done();
-        return res.redirect('/List');
-      });
-    }//end else
-  });//end pg connect
-});//end addTask
 
 //get entire list from server
 app.get('/List', function(req,res){
@@ -61,6 +41,48 @@ console.log('in List');
         // return result as a json version of array
         return res.json( resultArray );
       });//end on end
-    } // end no error
+    }; // end no error
   }); // end connect
 });//end get list
+
+//add task to database
+app.post('/addTask', function(req, res){
+  console.log('in addTask');
+  pg.connect(connectionString, function(err,client,done){
+    if(err){
+      console.log('error: ',err);
+    }//end if
+    else{
+      console.log('connected to database for addTask');
+      var resultArray=[];
+      console.log('task in server: ', req.body);
+      var resultQuery = client.query('INSERT INTO todo (task, completed) VALUES ($1, $2) RETURNING *;', [req.body.task,req.body.completed]);
+      resultQuery.on('end', function(){
+        done();
+        return res.redirect('/List');
+      });
+    }//end else
+  });//end pg connect
+});//end addTask
+
+app.post('/changeStatus', urlEncodedParser, function(req,res){
+  console.log('in changeStatus',req.body);
+  pg.connect(connectionString, function(err,client,done){
+    if(err){
+      console.log('error: ',err);
+    }//end if
+    else{
+      console.log('connected to database in changeStatus');
+      var resultQuery=client.query('UPDATE todo SET completed=($1) WHERE id=($2)',[req.body.completed,req.body.id]);
+      var resultArray = [];
+      resultQuery.on('row', function(row){
+        resultArray.push(row);
+      });
+      resultQuery.on('end', function(){
+        done();
+        console.log('in changeStatus completed=',req.body.completed);
+        return res.json(resultArray);
+      });
+    };//end else
+  });//end pg connect
+});//end changeStatus
