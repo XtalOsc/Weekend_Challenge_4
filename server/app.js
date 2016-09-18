@@ -15,8 +15,6 @@ app.listen('8080', function(){
   console.log('listening on port 8080');
 });
 
-
-
 //add task to database
 app.post('/addTask', function(req, res){
   console.log('in addTask');
