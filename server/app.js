@@ -17,7 +17,7 @@ app.listen('8080', function(){
 
 //get entire list from server
 app.get('/List', function(req,res){
-console.log('in List');
+  console.log('in List');
   //pg connect
   pg.connect( connectionString, function( err, client, done ){
     //if err
@@ -29,7 +29,7 @@ console.log('in List');
       // array to hold our results
       var resultArray=[];
       // query call to database table
-      var queryResults = client.query( 'SELECT * FROM todo' );
+      var queryResults = client.query( 'SELECT * FROM todo ORDER BY completed ASC' );
       queryResults.on( 'row', function( row ){
         // runs for each row in the query result
         resultArray.push( row );
@@ -65,7 +65,8 @@ app.post('/addTask', function(req, res){
   });//end pg connect
 });//end addTask
 
-app.post('/changeStatus', urlEncodedParser, function(req,res){
+//change completed status
+app.put('/changeStatus', urlEncodedParser, function(req,res){
   console.log('in changeStatus',req.body);
   pg.connect(connectionString, function(err,client,done){
     if(err){
@@ -86,3 +87,26 @@ app.post('/changeStatus', urlEncodedParser, function(req,res){
     };//end else
   });//end pg connect
 });//end changeStatus
+
+//delete task
+app.delete('/deleteTask', urlEncodedParser, function(req,res){
+  console.log('in deleteTask',req.body);
+  pg.connect(connectionString, function(err,client,done){
+    if(err){
+      console.log('error: ',err);
+    }//end if
+    else{
+      console.log('connected to database in deleteTask');
+      console.log('TRYING TO DELETE:', req.body.id);
+      var resultArray = [];
+      var resultQuery=client.query('DELETE FROM todo WHERE id=($1)',[req.body.id]);
+      resultQuery.on('row', function(row){
+        resultArray.push(row);
+      });//end on row
+      resultQuery.on('end', function(){
+        done();
+        return res.json(resultArray);
+      });//end on end
+    };//end else
+  });//end pg connect
+});//end deleteTask
