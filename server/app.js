@@ -7,7 +7,7 @@ var pg = require('pg');
 var connectionString = 'postgres://localhost:5432/toDoList';
 //access public folder
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({e1qxtended:false}));
 app.use(bodyParser.json());
 
 //spin up server - listening on port 8080
@@ -97,7 +97,7 @@ app.delete('/deleteTask', urlEncodedParser, function(req,res){
     }//end if
     else{
       console.log('connected to database in deleteTask');
-      console.log('TRYING TO DELETE:', req.body.id);
+      console.log('Deleted: ', req.body.id);
       var resultArray = [];
       var resultQuery=client.query('DELETE FROM todo WHERE id=($1)',[req.body.id]);
       resultQuery.on('row', function(row){

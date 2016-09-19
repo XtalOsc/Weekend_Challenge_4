@@ -2,14 +2,14 @@ console.log('index.js sourced');
 
 $(document).ready(function(){
   console.log('document ready sourced');
-  var taskArray = [];
+  //show tasks on page load
   getTasks();
 
   //Add tasks to list
   $('#createTask').on('click', function(){
     console.log('in createTask on click');
 
-    //get user input
+    //user input
     var objectToSend = {
       task : $('#taskIn').val(),
       completed : false
@@ -21,10 +21,6 @@ $(document).ready(function(){
       data: objectToSend,
       success: function (data){
         console.log('in ajax success addTask');
-        //push to task array
-        taskArray=data;
-        console.log('task array: ',taskArray);
-        listTasks(taskArray);
         getTasks();
       }//end success
     });//end ajax
@@ -45,10 +41,7 @@ $(document).ready(function(){
         data: objectToSend,
         success: function (data){
           console.log('in ajax success changeStatus');
-          //push to task array
-          taskArray=data;
-          console.log('task array: ',taskArray);
-          listTasks(taskArray);
+          getTasks();
         }//end success
       });//end ajax
   });//end checkbox change
@@ -79,22 +72,7 @@ $(document).ready(function(){
   });//end delete
 });//end document ready
 
-var listTasks = function(task){
- console.log('in listTasks');
- console.log('taskArray:', task);
- var outputText = '';
- for (var i = 0; i < task.length; i++) {
- var checked = '';
- //check if task is completed
- if( task[i].completed ) {
- 	checked = ' checked="true"';
-}//end if
-   var line= '<input type="checkbox" ' + checked + ' class="checkbox" id="' + task[i].id + '"><span>'+ task[i].task + '</span> <button class="delete" id="'+task[i].id+'">Delete</button>';
-   outputText += '<p id="task' + i + '">' + line + '</p>';
-   $('#taskList').html(outputText);
- }//end for loop
-}//end listTasks function
-
+//Display updated task list on DOM
 var getTasks = function(){
   $.ajax({
     type: 'GET',
@@ -107,6 +85,7 @@ var getTasks = function(){
       //check if task is completed
       if( task[i].completed ) {
       	checked = ' checked="true"';
+        $('#taskList').empty();
       }//end if
         var line= '<input type="checkbox" ' + checked + ' class="checkbox" id="' + task[i].id + '"><span>'+ task[i].task + '</span> <button class="delete" id="'+task[i].id+'">Delete</button>';
         outputText += '<p id="task' + i + '">' + line + '</p>';
