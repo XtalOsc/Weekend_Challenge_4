@@ -7,13 +7,21 @@ var pg = require('pg');
 var connectionString = 'postgres://localhost:5432/toDoList';
 //access public folder
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded({e1qxtended:false}));
+app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 //spin up server - listening on port 8080
 app.listen('8080', function(){
   console.log('listening on port 8080');
 });
+
+//Debug
+// app.use( function( req, res, next ) {
+//   console.log( req.body );
+//   next();
+// });
+
+
 
 //get entire list from server
 app.get('/List', function(req,res){
