@@ -15,14 +15,6 @@ app.listen('8080', function(){
   console.log('listening on port 8080');
 });
 
-//Debug
-// app.use( function( req, res, next ) {
-//   console.log( req.body );
-//   next();
-// });
-
-
-
 //get entire list from server
 app.get('/List', function(req,res){
   console.log('in List');
