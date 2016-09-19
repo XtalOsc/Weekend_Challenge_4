@@ -57,6 +57,9 @@ $(document).ready(function(){
   $('#taskList').on('click', '.delete', function() {
     console.log('in on click delete');
     // console.log(this);
+
+    if (confirm("Do you want to delete this task?") === true) {
+      console.log('in if confirm statement');
       var objectToSend = {
         id : $(this).attr('id'),
       }; // end object
@@ -72,6 +75,7 @@ $(document).ready(function(){
         // error: function(error){console.log("ERROR", error)}//end error
       });//end ajax
       getTasks();
+    };//end if
   });//end delete
 });//end document ready
 
