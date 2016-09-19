@@ -1,3 +1,57 @@
 input[type="checkbox"]:checked + span{
   color:#BCBCBC;
+  text-decoration: line-through;
+}
+input[type="checkbox"]:checked {
+  color:#BCBCBC;
+  margin-right: 10px;
+}
+input[type="checkbox"]{
+  margin-right: 10px;
+}
+p {
+  margin: inherit;
+  margin-bottom: 3px;
+  margin-left: 30px;
+}
+
+button {
+  padding: inherit;
+  margin-left: 10px;
+}
+hr{
+  color: lightgray;
+}
+
+h3{
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 10px;
+  /*margin-top:40px;*/
+}
+h2{
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.list{
+  border-color: #f00;
+  width: 450px;
+  float:left;
+}
+
+.add{
+  float: right;
+  margin-right: 40px;
+}
+
+.group:before, .group:after {
+  content: "";
+  display: table;
+}
+.group:after {
+  clear: both;
+}
+.group {
+zoom: 1;
 }
